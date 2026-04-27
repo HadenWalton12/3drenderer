@@ -25,10 +25,12 @@ SDL_Window* g_window = NULL;
 SDL_Renderer* g_renderer = NULL;
 
 bool is_running = true;
+int frame = 0;
+int g_window_width;
+int g_window_height;
 
-int g_window_width = 800;
-int g_window_height = 600;
-
+//Dynamic Initialisation of Window Creation - Query SDL to get adapter fullscreen max width and height
+SDL_DisplayMode display_mode;
 
 void render_color_buffer()
 {
@@ -50,6 +52,12 @@ bool initialise_window(void) //We put void inside parameter list since in c, if 
 		fprintf(stderr, "Error : Could'nt initialise SDL\n");
 		return false;
 	}
+
+	SDL_GetCurrentDisplayMode(0, &display_mode);//Reference display mode to update display mode contents with adapter/display properties
+
+
+	g_window_width = display_mode.w;
+	g_window_height = display_mode.h;
 
 	//Create SDL Window
 	g_window = SDL_CreateWindow(
@@ -81,6 +89,9 @@ bool initialise_window(void) //We put void inside parameter list since in c, if 
 		return false;
 	}
 
+	//Change to true fullscreen
+	SDL_SetWindowFullscreen(g_window, SDL_WINDOW_FULLSCREEN);
+
 	return true;
 }
 
@@ -99,6 +110,38 @@ void clear_color_buffer(uint32_t color)
 }
 
 
+void draw_grid(void)
+{
+
+	//Loop through each pixel value, set color
+	for (int row = 0; row < g_window_height; row++)
+	{
+		for (int column = 0; column < g_window_width; column++)
+		{
+			//We want to draw grid between pixels, we space out between every 30 on row and column.
+			//If that pixel iteration is divisible by 10, then we modify colour of pixel.
+			//Must use || since we want to modify position on row and column
+			if (row % 100 == 0 || column % 100 == 0)
+			{
+				color_buffer[(g_window_width * row) + column] = 0X000000;
+			}
+		}
+	}
+
+}
+
+void draw_rect(int x , int y, int width, int height, uint32_t color)
+{
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < height; j++)
+		{
+			//Calculate pixel offsets in buffer
+			color_buffer[(g_window_width * (j + y)) + (i + x)] = color;
+
+		}
+	}
+}
 
 void setup(void)
 {
@@ -109,7 +152,7 @@ void setup(void)
 	//type is size of uint32_t (exactly 4 bytes), number of elements is determentant of width and height of window
 	//NOTE - This isnt a matrix or 2d array, its a sequential, contigous block of addressible eleents (linear sequence of color values)
 	//NOTE 2 - MALLOC IS POWERFUL - be careful using it since we need to manage lifetime of dynamically allocated objects
-	color_buffer = (uint32_t*)malloc(sizeof(uint32_t) * g_window_width * g_window_height);
+	color_buffer = (uint32_t*)malloc(sizeof(uint32_t) * (g_window_width * g_window_width ));
 	
 	//Simple modification of color buffer
 	//color_buffer[0] = 0xFFFF0000;
@@ -173,6 +216,11 @@ void render(void)
 	SDL_SetRenderDrawColor(g_renderer, 0, 0,0 ,255);
 	SDL_RenderClear(g_renderer);//Clear render target
 
+	//draw_grid();//Draw to color buffer before presenting to tex object
+
+	draw_rect(200, 200, 200, 100, 0X0FFF00);
+	//draw_rect(rand() % g_window_width, rand() % g_window_height, 200, 100, 0X000000); Draws without no bounds checking
+	
 	render_color_buffer();
 	clear_color_buffer(0XFFFFFF00);
 	SDL_RenderPresent(g_renderer);//Present window
