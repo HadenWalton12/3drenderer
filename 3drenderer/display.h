@@ -20,6 +20,9 @@ extern SDL_DisplayMode display_mode;
 //function protypes / signatures
 void render_color_buffer();
 bool initialise_window(void);
+void draw_pixel(int x, int y, uint32_t color);
+void draw_grid(void);
+void draw_rect(int x, int y, int width, int height, uint32_t color);
 void clear_color_buffer(uint32_t color);
 #endif // !display_h
 

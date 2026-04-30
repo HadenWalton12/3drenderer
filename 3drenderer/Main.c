@@ -18,42 +18,6 @@ int g_window_height;
 //Dynamic Initialisation of Window Creation - Query SDL to get adapter fullscreen max width and height
 SDL_DisplayMode display_mode;
 
-
-
-
-void draw_grid(void)
-{
-
-	//Loop through each pixel value, set color
-	for (int row = 0; row < g_window_height; row++)
-	{
-		for (int column = 0; column < g_window_width; column++)
-		{
-			//We want to draw grid between pixels, we space out between every 30 on row and column.
-			//If that pixel iteration is divisible by 10, then we modify colour of pixel.
-			//Must use || since we want to modify position on row and column
-			if (row % 100 == 0 || column % 100 == 0)
-			{
-				color_buffer[(g_window_width * row) + column] = 0X000000;
-			}
-		}
-	}
-
-}
-
-void draw_rect(int x, int y, int width, int height, uint32_t color)
-{
-	for (int i = 0; i < width; i++)
-	{
-		for (int j = 0; j < height; j++)
-		{
-			//Calculate pixel offsets in buffer
-			color_buffer[(g_window_width * (j + y)) + (i + x)] = color;
-
-		}
-	}
-}
-
 void setup(void)
 {
 
@@ -119,8 +83,14 @@ void render(void)
 
 	//draw_grid();//Draw to color buffer before presenting to tex object
 
-	draw_rect(200, 200, 200, 100, 0X0FFF00);
-	//draw_rect(rand() % g_window_width, rand() % g_window_height, 200, 100, 0X000000); Draws without no bounds checking
+	draw_rect(200, 200, 200, 100, rand());
+	draw_rect(rand() % g_window_width, rand() % g_window_height, 200, 100, rand()); //Draws without no bounds checking
+	
+	for (int i = 0; i < 2500; i++)
+	{
+		draw_pixel(5, i, rand());
+
+	}
 
 	render_color_buffer();
 	clear_color_buffer(0XFFFFFF00);

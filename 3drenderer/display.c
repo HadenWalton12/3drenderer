@@ -14,6 +14,54 @@ void render_color_buffer()
 
 
 
+
+void draw_grid(void)
+{
+
+	//Loop through each pixel value, set color
+	for (int row = 0; row < g_window_height; row++)
+	{
+		for (int column = 0; column < g_window_width; column++)
+		{
+			//We want to draw grid between pixels, we space out between every 30 on row and column.
+			//If that pixel iteration is divisible by 10, then we modify colour of pixel.
+			//Must use || since we want to modify position on row and column
+			if (row % 100 == 0 || column % 100 == 0)
+			{
+				color_buffer[(g_window_width * row) + column] = 0X000000;
+			}
+		}
+	}
+
+}
+
+void draw_rect(int x, int y, int width, int height, uint32_t color)
+{
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < height; j++)
+		{
+			//Calculate pixel offsets in buffer
+			color_buffer[(g_window_width * (j + y)) + (i + x)] = color;
+
+		}
+	}
+}
+
+//Individually set a pixel
+void draw_pixel(int x, int y, uint32_t color)
+{
+	//Check if values are negative first
+
+	//bounds checking, dont want to draw pixel outside the screen size // ISSUE - DONT CHECK FOR NEGATIVE VALUES
+	//Why must we do this? To protect color buffer storing redudant pixel data and to prevent out of bounds errors wih buffer
+	if (x < g_window_width && y < g_window_height && x >0 && y > 0)
+	{
+		color_buffer[(g_window_width * y) + x] = color;
+
+	}
+}
+
 bool initialise_window(void) //We put void inside parameter list since in c, if parameter list empty, compiler thinks any number of arguments can be passed.Explicitly declares this function takes no parameters
 {
 	//Initialises SDL, overloaded method to declare different SDL components
@@ -74,7 +122,7 @@ void clear_color_buffer(uint32_t color)
 		for (int column = 0; column < g_window_width; column++)
 		{
 			color_buffer[(g_window_width * row) + column] = color;//Since color-buffer is pointer to array of addresses, use this calculation to get to the next address in memory
-			//(WINDOW WIDTH * ROW) + Column = Pixel Address in memory (linear sequence of addresses
+			//(WINDOW WIDTH * ROW) + Column = Pixel Address in memory (linear  /contiguous sequence of addresses, A 1D Array, NOT 2D
 		}
 	}
 
