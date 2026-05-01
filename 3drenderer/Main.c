@@ -23,6 +23,7 @@ SDL_DisplayMode display_mode;
 #define POINTS (9 * 9 * 9)//NO MAGIC NUMBERS! Bad practise - Use macro
 vec3_t cube[POINTS];
 
+vec2_t projected_cube[POINTS];
 
 void setup(void)
 {
@@ -68,7 +69,6 @@ void setup(void)
 
 		}//MIDDLE LOOP
 
-		//point_counter++;
 	}//OUTER LOOP
 
 
@@ -99,8 +99,28 @@ void process_input(void)
 	}
 }
 
+//Basic orthographic projection - we ignore the Z
+vec2_t project(vec3_t point)
+{
+	vec2_t projected_point = {
+		.x = point.x,
+		.y = point.y
+
+	};
+
+	return projected_point;
+}
+
 void update(void)
 {
+	//Project cube point
+	for (int i = 0; i < POINTS; i++)
+	{
+		vec3_t point = cube[i];
+		
+		//Save projected 2D vector (point)
+		projected_cube[i] = project(point);
+	}
 
 }
 
@@ -111,15 +131,20 @@ void render(void)
 
 	//draw_grid();//Draw to color buffer before presenting to tex object
 
-	draw_rect(200, 200, 200, 100, rand());
-	draw_rect(rand() % g_window_width, rand() % g_window_height, 200, 100, rand()); //Draws without no bounds checking
+	//draw_rect(200, 200, 200, 100, rand());
+	//draw_rect(rand() % g_window_width, rand() % g_window_height, 200, 100, rand()); //Draws without no bounds checking
 	
-	for (int i = 0; i < 2500; i++)
+	//for (int i = 0; i < 2500; i++)
+	//{
+	//	draw_pixel(5, i, rand());
+
+	//}
+
+	//We can use draw pixel function to draw each point projected - loop through them
+	for (int i = 0; i < POINTS; i++)
 	{
-		draw_pixel(5, i, rand());
-
+		draw_rect(projected_cube[i].x, projected_cube[i].y,4 ,4,  rand());
 	}
-
 	render_color_buffer();
 	clear_color_buffer(0XFFFFFF00);
 	SDL_RenderPresent(g_renderer);//Present window

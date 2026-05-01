@@ -42,7 +42,9 @@ void draw_rect(int x, int y, int width, int height, uint32_t color)
 		for (int j = 0; j < height; j++)
 		{
 			//Calculate pixel offsets in buffer
-			color_buffer[(g_window_width * (j + y)) + (i + x)] = color;
+			//color_buffer[(g_window_width * (j + y)) + (i + x)] = color; 
+
+			draw_pixel(x * i, x * j, color);
 
 		}
 	}
@@ -55,7 +57,7 @@ void draw_pixel(int x, int y, uint32_t color)
 
 	//bounds checking, dont want to draw pixel outside the screen size // ISSUE - DONT CHECK FOR NEGATIVE VALUES
 	//Why must we do this? To protect color buffer storing redudant pixel data and to prevent out of bounds errors wih buffer
-	if (x < g_window_width && y < g_window_height && x >0 && y > 0)
+	if (x < g_window_width && y < g_window_height && x >= 0 && y >= 0)
 	{
 		color_buffer[(g_window_width * y) + x] = color;
 
