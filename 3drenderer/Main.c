@@ -18,6 +18,12 @@ int g_window_height;
 //Dynamic Initialisation of Window Creation - Query SDL to get adapter fullscreen max width and height
 SDL_DisplayMode display_mode;
 
+
+//Array of vectors to define cube
+#define POINTS (9 * 9 * 9)//NO MAGIC NUMBERS! Bad practise - Use macro
+vec3_t cube[POINTS];
+
+
 void setup(void)
 {
 
@@ -44,6 +50,28 @@ void setup(void)
 		g_window_width, //Texture will cover width of screen
 		g_window_height //Texture will cover height of screen
 	);
+
+	int point_counter = 0;
+	//Load and create vec array in 3D cartesian range -1 to 1
+	for (float x = -1; x < 1; x += 0.25)
+	{
+		for (float y  = -1; y < 1; y += 0.25)
+		{
+			for (float z = -1; z < 1; z += 0.25)
+			{
+				//Create new point each iteration
+				vec3_t new_point = { .x = x , .y = y, .z = z };
+				
+				//Add to array
+				cube[point_counter++] = new_point;
+			}//INNER LOOP
+
+		}//MIDDLE LOOP
+
+		//point_counter++;
+	}//OUTER LOOP
+
+
 }
 
 
