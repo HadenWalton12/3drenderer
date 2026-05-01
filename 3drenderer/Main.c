@@ -18,7 +18,7 @@ int g_window_height;
 //Dynamic Initialisation of Window Creation - Query SDL to get adapter fullscreen max width and height
 SDL_DisplayMode display_mode;
 
-
+#define FOV (90) //Used in vector scalar calculations
 //Array of vectors to define cube
 #define POINTS (9 * 9 * 9)//NO MAGIC NUMBERS! Bad practise - Use macro
 vec3_t cube[POINTS];
@@ -54,11 +54,11 @@ void setup(void)
 
 	int point_counter = 0;
 	//Load and create vec array in 3D cartesian range -1 to 1
-	for (float x = -1; x < 1; x += 0.25)
+	for (float x = -1; x <= 1; x += 0.25)
 	{
-		for (float y  = -1; y < 1; y += 0.25)
+		for (float y  = -1; y <= 1; y += 0.25)
 		{
-			for (float z = -1; z < 1; z += 0.25)
+			for (float z = -1; z <= 1; z += 0.25)
 			{
 				//Create new point each iteration
 				vec3_t new_point = { .x = x , .y = y, .z = z };
@@ -103,8 +103,10 @@ void process_input(void)
 vec2_t project(vec3_t point)
 {
 	vec2_t projected_point = {
-		.x = point.x,
-		.y = point.y
+		.x = (FOV * point.x),
+		.y = (FOV *  point.y)
+
+		//MODIFIED TO USE SCALAR MULTIPLICATION TO DENORMALISE THE VECTOR VALUES
 
 	};
 
@@ -143,7 +145,8 @@ void render(void)
 	//We can use draw pixel function to draw each point projected - loop through them
 	for (int i = 0; i < POINTS; i++)
 	{
-		draw_rect(projected_cube[i].x, projected_cube[i].y,4 ,4,  rand());
+		vec2_t p_point = projected_cube[i];
+		draw_rect(p_point.x + (g_window_width / 4), p_point.y + (g_window_height / 4), 4, 4, rand());
 	}
 	render_color_buffer();
 	clear_color_buffer(0XFFFFFF00);
