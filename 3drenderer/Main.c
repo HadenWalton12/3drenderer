@@ -18,13 +18,15 @@ int g_window_height;
 //Dynamic Initialisation of Window Creation - Query SDL to get adapter fullscreen max width and height
 SDL_DisplayMode display_mode;
 
-#define FOV (90) //Used in vector scalar calculations
+#define FOV (900) //Field of View - Used in scalar calculations to bring object furter or closer in projected plane
 //Array of vectors to define cube
 #define POINTS (9 * 9 * 9)//NO MAGIC NUMBERS! Bad practise - Use macro
 vec3_t cube[POINTS];
 
 vec2_t projected_cube[POINTS];
 
+//Origin viewpoint for  perspective projection
+vec3_t camera_pos = {.x = 0.0, .y = 0.0, .z = -5};
 void setup(void)
 {
 
@@ -99,27 +101,44 @@ void process_input(void)
 	}
 }
 
-//Basic orthographic projection - we ignore the Z
+////Basic orthographic projection - we ignore the Z
+//vec2_t project(vec3_t point)
+//{
+//	vec2_t projected_point = {
+//		.x = (FOV * point.x),
+//		.y = (FOV *  point.y) 
+//
+//		//MODIFIED TO USE SCALAR MULTIPLICATION TO DENORMALISE THE VECTOR VALUES
+//
+//	};
+//
+//	return projected_point;
+//}
+
+
+//Basic Projective prospection - Convert 3D point in 2D space, using the depth to scale position of point in projection space(the monitor)
+//Still orthographic projection (convert 3D to 2D) however we didnt ignore the Z value
+//However this has issues, it doesnt really look like a cube, regardless, we added projection.
 vec2_t project(vec3_t point)
 {
 	vec2_t projected_point = {
-		.x = (FOV * point.x),
-		.y = (FOV *  point.y)
-
-		//MODIFIED TO USE SCALAR MULTIPLICATION TO DENORMALISE THE VECTOR VALUES
-
+		.x = (FOV * point.x) / point.z,
+		.y = (FOV * point.y) / point.z
+		//NOTE - FOV is used to scale point closer or further in projected space
 	};
 
 	return projected_point;
 }
-
 void update(void)
 {
+
+	
 	//Project cube point
 	for (int i = 0; i < POINTS; i++)
 	{
 		vec3_t point = cube[i];
-		
+
+		point.z -= camera_pos.z;//Move points away from camera
 		//Save projected 2D vector (point)
 		projected_cube[i] = project(point);
 	}

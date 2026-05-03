@@ -77,8 +77,8 @@ bool initialise_window(void) //We put void inside parameter list since in c, if 
 
 
 
-	g_window_width = display_mode.w ;
-	g_window_height = display_mode.h ;
+	g_window_width = display_mode.w  / 2;
+	g_window_height = display_mode.h / 2;
 
 	//Create SDL Window
 	g_window = SDL_CreateWindow(
@@ -111,8 +111,8 @@ bool initialise_window(void) //We put void inside parameter list since in c, if 
 	}
 
 	//Change to true fullscreen
-	SDL_SetWindowFullscreen(g_window, SDL_WINDOW_FULLSCREEN);
-	//SDL_SetWindowBordered(g_window, SDL_WINDOW_RESIZABLE);
+	//SDL_SetWindowFullscreen(g_window, SDL_WINDOW_FULLSCREEN);
+	SDL_SetWindowBordered(g_window, SDL_WINDOW_RESIZABLE);
 
 	return true;
 }
