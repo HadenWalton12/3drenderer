@@ -71,12 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\SDL3\SDL-release-3.4.16\include\SDL3</IncludePath>
-    <LibraryPath>C:\SDL\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\mrdar\Documents\GitHub\3drenderer\3drenderer\SDL\include</IncludePath>
+    <LibraryPath>C:\Users\mrdar\Documents\GitHub\3drenderer\3drenderer\SDL\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\SDL3\SDL-release-3.4.16\include\SDL3</IncludePath>
-    <LibraryPath>C:\SDL\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\mrdar\Documents\GitHub\3drenderer\3drenderer\SDL\include</IncludePath>
+    <LibraryPath>C:\Users\mrdar\Documents\GitHub\3drenderer\3drenderer\SDL\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>C:\Users\mrdar\source\repos\3drenderer\3drenderer\SDL\include;$(IncludePath)</IncludePath>
